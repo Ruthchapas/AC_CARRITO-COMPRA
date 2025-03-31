@@ -27,54 +27,69 @@ Recuerda la importancia comentar con detalle el código.
  */
 // Array para guardar los productos seleccionados
 const productos = ["Pomelo", "Kiwi", "Limón", "Piña", "Sandía", "Aguacate", "Fresón", "Mandarina", "Manzana Fuji", "Plátanos", "Pera", "Manzana Golden"];
-const precios = [2.50, 4.20, 1.20,2.80, 1.20,2.50,6.20, 1.90 ,4.20,3.20, 1.80, 3.50]
+const precios = [2.50, 4.20, 1.20, 2.80, 1.20, 2.50, 6.20, 1.90, 4.20, 3.20, 1.80, 3.50];
 
-let totalCompra = 0
+let totalCompra = 0;
+let carrito = document.getElementById("carrito");
+let preuFinal = document.getElementById("preuFinal");
 
-let carrito = document.getElementById("carrito")
-let preuFinal = document.getElementById("preuFinal")
-let listaCompra = [
-    { fruta: "Pomelo", precio: 2.50 },
-    { fruta: "Kiwi", precio: 4.20 },
-    { fruta: "Limón", precio: 1.20 },
-    { fruta: "Piña", precio: 2.80 },
-    { fruta: "Sandía", precio: 1.20 },
-    { fruta: "Aguacate", precio: 2.50 },
-    { fruta: "Fresón", precio: 6.20 },
-    { fruta: "Mandarina", precio: 1.90 },
-    { fruta: "Manzana Fuji", precio: 4.20 },
-    { fruta: "Plátanos", precio: 3.20 },
-    { fruta: "Pera", precio: 1.80 },
-    { fruta: "Manzana Golden", precio: 3.50 }
-  ];
+let listaCompra = [];
 
+// hago una función para obtener los datos y añadirlos al carrito de la compra
+function obtenerDatos(fruta, precio) {
+    let cantidad = prompt(`¿Qué cantidad de ${fruta} quieres comprar?`);
+    cantidad = parseFloat(cantidad);
 
-function obtenerDatos(fruta, precio, unidad) {
-    console.log(fruta, precio, unidad)
-    let cantidad = prompt(`¿Qué cantidad de ${fruta} quieres comprar?`)
-    console.log(cantidad * precio)
-    cantidad = parseFloat(cantidad)
+    // para indicar si lo que se introduce en el prompt son letras o menor que 0, no sirve.
+    if (isNaN(cantidad) || cantidad <= 0) {
+        alert("Debe introducir una cantidad correcta");
+        return; // Termina la función si la cantidad no es válida
+    }
 
-    if (cantidad <= 0) {
-        alert("Debe introducir una cantidad correcta")
-        return //para que acabe la función
-    } 
-    
-    let calculo = cantidad * precio
-    totalCompra += calculo
-    listaCompra.push(fruta, precio, cantidad )
-    console.log(listaCompra)
+    let calculo = cantidad * precio;
+    totalCompra += calculo;
 
-   
-    carrito.innerHTML += `<p> <i class="fas fa-trash-alt"></i> ${fruta} : ${precio}€ X ${cantidad}/${unidad} = ${calculo.toFixed(2)}€</p>`
-    preuFinal.innerHTML = totalCompra.toFixed(2) + "€"
+    // Crear un objeto con la información del producto y añadirlo a la lista de compra
+    listaCompra.push({ fruta: fruta, precio: precio, cantidad: cantidad, calculo: calculo });
+
+    // Añadir el producto al carrito visualmente
+    actualizarCarrito();
+
+    // Actualizar el total de la compra
+    preuFinal.innerHTML = totalCompra.toFixed(2) + "€";
 }
 
-listaCompra.push(carrito.innerHTML)
-console.log (listaCompra)
+// hago una funcion para eliminar un elemento del carrito
+function eliminarProducto(productoId) {
+    for (let i = 0; i < listaCompra.length; i++) {
+        let producto = listaCompra[i];
+        let productoIdCarrito = producto.fruta.split(' ').join('_'); // Generamos la id del producto
 
-    
+        if (productoIdCarrito === productoId) {
+            
+            totalCompra -= producto.calculo;//resta del producto que se ha eliminado haciendo click en la basura
 
-function eliminarCompra (){
+            // Eliminar el producto de la lista de compra con splice
+            listaCompra.splice(i, 1);
 
+           
+            actualizarCarrito();
+
+            // Actualizar el total de la compra
+            preuFinal.innerHTML = totalCompra.toFixed(2) + "€";
+            break; // Salir del bucle cuando se encuentra el producto
+        }
+    }
+}
+
+// crear función para actualizar el carrito visualmente
+function actualizarCarrito() {
+
+    carrito.innerHTML = '';
+
+    for (let i = 0; i < listaCompra.length; i++) {
+        let item = listaCompra[i];
+        let productoId = item.fruta.split(' ').join('_')
+        carrito.innerHTML += `<p id="${productoId}"><i class="fas fa-trash-alt" onclick="eliminarProducto('${productoId}')"></i>${item.fruta} : ${item.precio}€ X ${item.cantidad}kg = ${item.calculo.toFixed(2)}€</p>`
+    }
 }

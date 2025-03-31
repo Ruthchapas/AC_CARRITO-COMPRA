@@ -72,7 +72,12 @@ p {
 .imatges {
     width: 100%;
 }
-
+.fas.fa-trash-alt {
+    color: red; 
+    cursor: pointer; /*  el cursor cambia a una mano al pasar por encima del ícono */
+    margin-right: 10px;
+    
+}
 #carrito{
     margin: .5rem 0;
 }
