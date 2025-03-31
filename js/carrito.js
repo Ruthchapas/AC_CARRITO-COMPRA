@@ -43,7 +43,7 @@ function obtenerDatos(fruta, precio) {
     // para indicar si lo que se introduce en el prompt son letras o menor que 0, no sirve.
     if (isNaN(cantidad) || cantidad <= 0) {
         alert("Debe introducir una cantidad correcta");
-        return; // Termina la función si la cantidad no es válida
+        return; // Terminna la función si la cantidad no es válida
     }
 
     let calculo = cantidad * precio;
